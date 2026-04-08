@@ -19,60 +19,68 @@ function App() {
   const [resultado, setResultado] = useState(null)
 
   async function handleSubmit() {
-    if (
-      !idade || !genero || !curso || !anoCurso || !horasEstud ||
-      !horasDorme || !horasRedes || !estresse ||
-      !ansiedade || !depressao || !pressaoAcademica ||
-      !estresseFinanceiro || !suporteSocial
-    ) {
-      return alert("Preencha todos os campos!")
-    }
-
-    if (idade < 0 || idade > 120)
-      return alert("Idade inválida")
-
-    if (ansiedade < 0 || ansiedade > 10)
-      return alert("Ansiedade inválida")
-
-    if (depressao < 0 || depressao > 10)
-      return alert("Depressão inválida")
-
-    if (pressaoAcademica < 0 || pressaoAcademica > 10)
-      return alert("Pressão acadêmica inválida")
-
-    if (estresseFinanceiro < 0 || estresseFinanceiro > 10)
-      return alert("Estresse financeiro inválido")
-
-    if (suporteSocial < 0 || suporteSocial > 10)
-      return alert("Suporte social inválido")
-
-    //CONVERTER PARA NUMBER
-    const dados = {
-      age: Number(idade),
-      daily_study_hours: Number(horasEstud),
-      daily_sleep_hours: Number(horasDorme),
-      screen_time_hours: Number(horasRedes),
-      anxiety_score: Number(ansiedade),
-      depression_score: Number(depressao)
-    }
-
-    try {
-      const response = await fetch("http://localhost:5000/prever", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(dados)
-      })
-
-      const data = await response.json()
-
-      setResultado(data.classe)
-    } catch (erro) {
-      console.error("Erro ao conectar com API:", erro)
-      alert("Erro ao conectar com o servidor")
-    }
+  if (
+    !idade || !genero || !curso || !anoCurso || !horasEstud ||
+    !horasDorme || !horasRedes || !estresse ||
+    !ansiedade || !depressao || !pressaoAcademica ||
+    !estresseFinanceiro || !suporteSocial
+  ) {
+    return alert("Preencha todos os campos!")
   }
+
+  if (idade < 0 || idade > 120)
+    return alert("Idade inválida")
+
+  if (ansiedade < 0 || ansiedade > 10)
+    return alert("Ansiedade inválida")
+
+  if (depressao < 0 || depressao > 10)
+    return alert("Depressão inválida")
+
+  if (pressaoAcademica < 0 || pressaoAcademica > 10)
+    return alert("Pressão acadêmica inválida")
+
+  if (estresseFinanceiro < 0 || estresseFinanceiro > 10)
+    return alert("Estresse financeiro inválido")
+
+  if (suporteSocial < 0 || suporteSocial > 10)
+    return alert("Suporte social inválido")
+
+  const dados = {
+    age: Number(idade),
+    gender: genero,
+    course: curso,
+    year: anoCurso,
+    daily_study_hours: Number(horasEstud),
+    daily_sleep_hours: Number(horasDorme),
+    screen_time_hours: Number(horasRedes),
+    stress_level: estresse,
+    anxiety_score: Number(ansiedade),
+    depression_score: Number(depressao),
+    academic_pressure_score: Number(pressaoAcademica),
+    financial_stress_score: Number(estresseFinanceiro),
+    social_support_score: Number(suporteSocial)
+  }
+
+  console.log("Dados enviados:", dados) 
+
+  try {
+    const response = await fetch("http://localhost:5000/prever", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(dados)
+    })
+
+    const data = await response.json()
+    setResultado(data.classe)
+
+  } catch (erro) {
+    console.error("Erro ao conectar com API:", erro)
+    alert("Erro ao conectar com o servidor")
+  }
+}
 
   return (
     <section id="center">
