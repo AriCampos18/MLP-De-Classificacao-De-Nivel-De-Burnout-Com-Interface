@@ -168,7 +168,7 @@ function App() {
         </div>
 
         <div className="form-group">
-          <label>Ano do course</label>
+          <label>Ano do Curso</label>
           <select value={year} onChange={(e) => setYear(e.target.value)}>
             <option value="">Selecione</option>
             <option value="1st">1º Ano</option>
@@ -179,22 +179,22 @@ function App() {
         </div>
 
         <div className="form-group">
-          <label>Horas de estudo</label>
+          <label>Horas de Estudo</label>
           <input type="number" value={daily_study_hours} onChange={(e) => setDaily_study_hours(e.target.value)} />
         </div>
 
         <div className="form-group">
-          <label>Horas de sono</label>
+          <label>Horas de Sono</label>
           <input type="number" value={daily_sleep_hours} onChange={(e) => setDaily_sleep_hours(e.target.value)} />
         </div>
 
         <div className="form-group">
-          <label>Horas em redes sociais</label>
+          <label>Horas em Redes Sociais</label>
           <input type="number" value={screen_time_hours} onChange={(e) => setScreen_time_hours(e.target.value)} />
         </div>
 
         <div className="form-group">
-          <label>Nível de stress_level</label>
+          <label>Nível de Estresse</label>
           <select value={stress_level} onChange={(e) => setStress_level(e.target.value)}>
             <option value="">Selecione</option>
             <option value="Low">Baixo</option>
@@ -214,17 +214,17 @@ function App() {
         </div>
 
         <div className="form-group">
-          <label>Pressão acadêmica (0-10)</label>
+          <label>Pressão Acadêmica (0-10)</label>
           <input type="number" value={academic_pressure_score} onChange={(e) => setAcademic_pressure_score(e.target.value)} />
         </div>
 
         <div className="form-group">
-          <label>Estresse financeiro (0-10)</label>
+          <label>Estresse Financeiro (0-10)</label>
           <input type="number" value={financial_stress_score} onChange={(e) => setFinancial_stress_score(e.target.value)} />
         </div>
 
         <div className="form-group">
-          <label>Suporte social (0-10)</label>
+          <label>Suporte Social (0-10)</label>
           <input type="number" value={social_support_score} onChange={(e) => setSocial_support_score(e.target.value)} />
         </div>
 
