@@ -266,10 +266,8 @@ function App() {
         <button className="btn-primary" onClick={handleSubmit}>
           Prever
         </button>
-
-        {/* RESULTADO */}
         {resultado !== null && (
-          <div style={{ marginTop: "20px", textAlign: "center" }}>
+          <div className="resultado">
             <h2>Resultado: {resultado}</h2>
           </div>
         )}

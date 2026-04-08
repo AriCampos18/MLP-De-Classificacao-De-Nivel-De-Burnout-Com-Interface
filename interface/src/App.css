@@ -16,12 +16,13 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   min-height: 100vh;
   gap: 20px;
+  padding: 20px;
 }
 
-/* HERO (TÍTULO) */
+/* HERO */
 .hero {
   text-align: center;
 }
@@ -42,27 +43,32 @@ body {
   margin-top: 10px;
 }
 
-/* CARD DO FORMULÁRIO */
+/* FORM CONTAINER AGORA EM GRID */
 .form-container {
   background: #ffffff;
   padding: 30px;
   border-radius: 16px;
-  width: 350px;
+  width: 100%;
+  max-width: 900px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
 }
 
-/* TÍTULO DO FORM */
+/* TÍTULO ocupa tudo */
 .form-container h3 {
+  grid-column: span 2;
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   color: #333;
 }
 
-/* GRUPOS DE INPUT */
+/* INPUT GROUP */
 .form-group {
   display: flex;
   flex-direction: column;
-  margin-bottom: 15px;
 }
 
 /* LABEL */
@@ -72,7 +78,7 @@ body {
   color: #555;
 }
 
-/* INPUTS E SELECT */
+/* INPUTS */
 input,
 select {
   padding: 10px;
@@ -82,7 +88,6 @@ select {
   transition: 0.2s;
 }
 
-/* FOCO BONITO */
 input:focus,
 select:focus {
   border-color: #7c3aed;
@@ -90,8 +95,9 @@ select:focus {
   box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.2);
 }
 
-/* BOTÃO PRINCIPAL */
+/* BOTÃO ocupa tudo */
 .btn-primary {
+  grid-column: span 2;
   width: 100%;
   padding: 12px;
   margin-top: 10px;
@@ -104,16 +110,40 @@ select:focus {
   transition: 0.3s;
 }
 
-/* HOVER DO BOTÃO */
 .btn-primary:hover {
   background: #6d28d9;
   transform: scale(1.03);
 }
 
-/* RESPONSIVIDADE */
-@media (max-width: 400px) {
+/* RESULTADO ocupa tudo */
+.resultado {
+  grid-column: span 2;
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* RESPONSIVO */
+@media (max-width: 600px) {
   .form-container {
-    width: 90%;
-    padding: 20px;
+    grid-template-columns: 1fr;
+  }
+
+  .form-container h3,
+  .btn-primary,
+  .resultado {
+    grid-column: span 1;
+  }
+}
+
+/* EXTRA: 3 colunas em telas grandes */
+@media (min-width: 1000px) {
+  .form-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .form-container h3,
+  .btn-primary,
+  .resultado {
+    grid-column: span 3;
   }
 }
