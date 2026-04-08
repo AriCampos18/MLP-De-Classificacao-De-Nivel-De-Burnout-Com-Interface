@@ -26,10 +26,9 @@ function App() {
       estresseFinanceiro, suporteSocial
     ]
 
-    if (campos.some(campo => campo === "")) {
+    if (campos.some(c => c === "")) 
       return alert("Preencha todos os campos!")
-    }
-
+        
     if (idade < 0 || idade > 120)
       return alert("Idade inválida")
 
@@ -64,14 +63,10 @@ function App() {
       social_support_score: Number(suporteSocial)
     }
 
-    console.log("Dados enviados:", dados)
-
     try {
       const response = await fetch("http://localhost:5000/prever", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(dados)
       })
 
@@ -79,13 +74,12 @@ function App() {
       setResultado(data.classe)
 
     } catch (erro) {
-      console.error("Erro ao conectar com API:", erro)
-      alert("Erro ao conectar com o servidor")
+      alert("Erro ao conectar com API")
     }
   }
 
   return (
-    <section id="center">
+     <section id="center">
       <div className="hero">
         <h1>Trabalho Bimestral MLP</h1>
         <h2>Previsão do Nível de Burnout</h2>
