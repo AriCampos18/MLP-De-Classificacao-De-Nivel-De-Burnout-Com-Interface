@@ -10,73 +10,84 @@ function App() {
   const [horasEstud, setHorasEstud] = useState("")
   const [horasDorme, setHorasDorme] = useState("")
   const [horasRedes, setHorasRedes] = useState("")
-  const [estressada, setEstressada] = useState("")
+  const [estresse, setEstresse] = useState("")
   const [ansiedade, setAnsiedade] = useState("")
   const [depressao, setDepressao] = useState("")
   const [pressaoAcademica, setPressaoAcademica] = useState("")
   const [estresseFinanceiro, setEstresseFinanceiro] = useState("")
   const [suporteSocial, setSuporteSocial] = useState("")
+  const [resultado, setResultado] = useState(null)
 
-  function handleSubmit() {
-
-    if (!idade || !genero || !curso || !anoCurso || !horasEstud || !horasDorme || !horasRedes || !estressada ||
-      !ansiedade || !ansiedade || !depressao || !pressaoAcademica || !estresseFinanceiro || !suporteSocial)
-      return console.log("ERRO: Preeencha todos os campos corretamente!!!!");
-
-
-    if (idade < 0 || idade > 200)
-      return console.log("ERRO: Idade Invalida!!!!");  
-
-    if (ansiedade < 0 || ansiedade > 10)
-      return console.log("ERRO: Nivel de Ansiedade Invalida!!!! Procure um Terapeuta!!!!");
-
-    if (depressao < 0 || depressao > 10)
-      return console.log("ERRO: Nivel de Depressão Invalida!!!! Procure um Terapeuta!!!!");
-
-    if (pressaoAcademica < 0 || pressaoAcademica > 10)  
-      return console.log("ERRO: Nivel de Pressão Acadêmica Invalida!!!! Procure um Terapeuta!!!!");
-
-    if (estresseFinanceiro < 0 || estresseFinanceiro > 10)  
-      return console.log("ERRO: Nivel de Estresse Financeiro Invalido!!!! Procure um Terapeuta!!!!");
-
-    if (suporteSocial < 0 || suporteSocial > 10)  
-      return console.log("ERRO: Nivel de Suporte Social Invalido!!!! Procure um Terapeuta!!!!");
-
-    const dados = {
-      age: idade,
-      gender: genero,
-      course: curso,
-      year: anoCurso,
-      daily_study_hours: horasEstud,
-      daily_sleep_hours: horasDorme,
-      screen_time_hours: horasRedes,
-      stress_level: estressada,
-      anxiety_score: ansiedade,
-      depression_score: depressao,
-      academic_pressure_score: pressaoAcademica,
-      financial_stress_score: estresseFinanceiro,
-      social_support_score: suporteSocial
+  async function handleSubmit() {
+    if (
+      !idade || !genero || !curso || !anoCurso || !horasEstud ||
+      !horasDorme || !horasRedes || !estresse ||
+      !ansiedade || !depressao || !pressaoAcademica ||
+      !estresseFinanceiro || !suporteSocial
+    ) {
+      return alert("Preencha todos os campos!")
     }
 
-    console.log("Dados enviados:", dados)
+    if (idade < 0 || idade > 120)
+      return alert("Idade inválida")
+
+    if (ansiedade < 0 || ansiedade > 10)
+      return alert("Ansiedade inválida")
+
+    if (depressao < 0 || depressao > 10)
+      return alert("Depressão inválida")
+
+    if (pressaoAcademica < 0 || pressaoAcademica > 10)
+      return alert("Pressão acadêmica inválida")
+
+    if (estresseFinanceiro < 0 || estresseFinanceiro > 10)
+      return alert("Estresse financeiro inválido")
+
+    if (suporteSocial < 0 || suporteSocial > 10)
+      return alert("Suporte social inválido")
+
+    //CONVERTER PARA NUMBER
+    const dados = {
+      age: Number(idade),
+      daily_study_hours: Number(horasEstud),
+      daily_sleep_hours: Number(horasDorme),
+      screen_time_hours: Number(horasRedes),
+      anxiety_score: Number(ansiedade),
+      depression_score: Number(depressao)
+    }
+
+    try {
+      const response = await fetch("http://localhost:5000/prever", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(dados)
+      })
+
+      const data = await response.json()
+
+      setResultado(data.classe)
+    } catch (erro) {
+      console.error("Erro ao conectar com API:", erro)
+      alert("Erro ao conectar com o servidor")
+    }
   }
 
   return (
     <section id="center">
-      {/* HERO */}
       <div className="hero">
         <h1>Trabalho Bimestral MLP</h1>
         <h2>Previsão do Nível de Burnout</h2>
         <img src={viteLogo} className="vite" alt="Vite logo" />
       </div>
 
-      {/* FORMULÁRIO */}
       <div className="form-container">
         <h3>Preencha os dados</h3>
 
         <div className="form-group">
           <label>Idade</label>
-          <input value={idade} onChange={(e) => setIdade(e.target.value)} />
+          <input type="number" value={idade} onChange={(e) => setIdade(e.target.value)} />
         </div>
 
         <div className="form-group">
@@ -106,23 +117,23 @@ function App() {
         </div>
 
         <div className="form-group">
-          <label>Horas de estudo por dia</label>
-          <input value={horasEstud} onChange={(e) => setHorasEstud(e.target.value)} />
+          <label>Horas de estudo</label>
+          <input type="number" value={horasEstud} onChange={(e) => setHorasEstud(e.target.value)} />
         </div>
 
         <div className="form-group">
           <label>Horas de sono</label>
-          <input value={horasDorme} onChange={(e) => setHorasDorme(e.target.value)} />
+          <input type="number" value={horasDorme} onChange={(e) => setHorasDorme(e.target.value)} />
         </div>
 
         <div className="form-group">
           <label>Horas em redes sociais</label>
-          <input value={horasRedes} onChange={(e) => setHorasRedes(e.target.value)} />
+          <input type="number" value={horasRedes} onChange={(e) => setHorasRedes(e.target.value)} />
         </div>
 
         <div className="form-group">
           <label>Nível de estresse</label>
-          <select value={estressada} onChange={(e) => setEstressada(e.target.value)}>
+          <select value={estresse} onChange={(e) => setEstresse(e.target.value)}>
             <option value="">Selecione</option>
             <option value="Low">Baixo</option>
             <option value="Medium">Médio</option>
@@ -131,33 +142,25 @@ function App() {
         </div>
 
         <div className="form-group">
-          <label>O quanto você se considera uma pessoa ansiedade? (0-10)</label>
-          <input value={ansiedade} onChange={(e) => setAnsiedade(e.target.value)} />
+          <label>Ansiedade (0-10)</label>
+          <input type="number" value={ansiedade} onChange={(e) => setAnsiedade(e.target.value)} />
         </div>
 
         <div className="form-group">
-          <label>O quanto você se considera uma pessoa depressao? (0-10)</label>
-          <input value={depressao} onChange={(e) => setDepressao(e.target.value)} />
-        </div>
-
-        <div className="form-group">
-          <label>O quanto você se sente pressionado/a academicamente? (0-10)</label>
-          <input value={pressaoAcademica} onChange={(e) => setPressaoAcademica(e.target.value)} />
-        </div>
-
-        <div className="form-group">
-          <label>O quanto você se sente estressado com relação a finanças/dinheiro? (0-10)</label>
-          <input value={estresseFinanceiro} onChange={(e) => setEstresseFinanceiro(e.target.value)} />
-        </div>
-
-        <div className="form-group">
-          <label>Quanto você acha que pode contar com outras pessoas (família, amigos, rede de apoio, etc)? (0-10)</label>
-          <input value={suporteSocial} onChange={(e) => setSuporteSocial(e.target.value)} />
+          <label>Depressão (0-10)</label>
+          <input type="number" value={depressao} onChange={(e) => setDepressao(e.target.value)} />
         </div>
 
         <button className="btn-primary" onClick={handleSubmit}>
           Prever
         </button>
+
+        {/* RESULTADO */}
+        {resultado !== null && (
+          <div style={{ marginTop: "20px", textAlign: "center" }}>
+            <h2>Resultado: {resultado}</h2>
+          </div>
+        )}
       </div>
     </section>
   )
