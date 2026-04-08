@@ -148,3 +148,15 @@ select:focus {
     grid-column: span 3;
   }
 }
+
+/* REMOVE SETAS NO CHROME, EDGE, SAFARI */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* REMOVE SETAS NO FIREFOX */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
