@@ -8,63 +8,74 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Load the dataset
-dataset = pd.read_csv("dataset/student_mental_health_burnout.csv")
+dataset = pd.read_csv("./datasets/student_mental_health_burnout.csv")
 
-base_teste = pd.read_csv("base_teste.csv")
-base_treinamento = pd.read_csv("base_treinamento.csv")
+dataset.shape
 
-#separar os dados de saída
-base_teste
-base_treinamento
-atributos_teste = base_teste.drop("classe", axis=1)
-classes_teste = base_teste["classe"]
+dataset.isnull().sum()
 
-atributos_treinamento = base_treinamento.drop("classe", axis=1)
-classes_treinamento = base_treinamento["classe"]
+dataset=dataset.drop('student_id',axis=1)
 
-#usar o LabelEncoder para transforma as classes em valores numéricos
-classes_teste_numeral = LabelEncoder().fit_transform(classes_teste)
-classes_treinamento_numeral = LabelEncoder().fit_transform(classes_treinamento)
+dataset['burnout_level'].value_counts()
 
-#one hot encoding
-classe_teste_dummy = to_categorical(classes_teste_numeral)
-classe_treinamento_dummy = to_categorical(classes_treinamento_numeral)
+labelencoder = LabelEncoder()
+dataset['year'] = labelencoder.fit_transform(dataset['year'])
+dataset['stress_level'] = labelencoder.fit_transform(dataset['stress_level'])
+dataset['sleep_quality'] = labelencoder.fit_transform(dataset['sleep_quality'])
+dataset['internet_quality'] = labelencoder.fit_transform(dataset['internet_quality'])
+
+classes = dataset['burnout_level']
+dataset = dataset.drop('burnout_level',axis=1)
+
+classes.head( )
+
+dataset.head(10)
+
+dataset['course'].value_counts()
+
+dataset.shape
+
+#One hot Encoding automatico junto com label encoder: É uma forma mais moderna de fazer e evita erros ela pega a coluna exemplo gender cria as colunas gender_Female	gender_Male	gender_Other
+dataset = pd.get_dummies(dataset, columns=['gender'],dtype=int)# mais 3 colunas
+dataset = pd.get_dummies(dataset, columns=['course'],dtype=int)# mais 5 colunas
+classes = pd.get_dummies(classes, columns=['burnout_level'],dtype=int)# mais 2 colunas
+
+dataset.shape
+
+dataset.head(10)
+
+x_treino, x_teste, y_treino, y_teste = train_test_split(dataset, classes, test_size=0.3)
 
 mlp = Sequential()
-mlp.add(Dense(units=6, input_dim=6, activation='relu', kernel_initializer='random_uniform'))
-mlp.add(Dense(units=4, activation='relu', kernel_initializer='random_uniform'))
-#softmax: para classificação multi-classe
-mlp.add(Dense(units=5, activation='softmax', kernel_initializer='random_uniform'))
+mlp.add(Dense(units=11, input_dim = 784, activation= 'relu', kernel_initializer= 'random_uniform'))
+mlp.add(Dropout(0.2))
+mlp.add(Dense(units=6,  activation= 'relu', kernel_initializer= 'random_uniform'))
+mlp.add(Dropout(0.2))
+mlp.add(Dense(units=3, activation= 'softmax', kernel_initializer= 'random_uniform'))
 
 mlp.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['categorical_accuracy'])
 
-mlp.fit(atributos_treinamento, classe_treinamento_dummy, epochs=200, batch_size=16)
+historico = mlp.fit(atributos_train, classe_dummy_train, epochs = 10, batch_size = 16)
 
-resultados = mlp.evaluate(atributos_teste, classe_teste_dummy)
-resultados
-
-#passa os dados de teste pelo modelo MLP já treinado e calcula as saídas da camada final para cada amostra
-#retorna as probabilidades de ser cada classe para cada linha de teste
-respostas = mlp.predict(atributos_teste)
+respostas = mlp.predict(atributos_test)
 respostas
 
-loss, acc = mlp.evaluate(atributos_teste, classe_teste_dummy, verbose=0)
-print(f"Loss no teste: {loss:.4f}")
-print(f"Acurácia no teste: {acc*100:.2f}%")
-
-import numpy as np
 previsoes = [np.argmax(t) for t in respostas]
-classes_desejadas = [np.argmax(t) for t in classe_teste_dummy]
+classes_desejadas = [np.argmax(t) for t in classe_dummy_test]
+previsoes[0:5]
 
-from sklearn.metrics import confusion_matrix
-mc = confusion_matrix(classes_desejadas, previsoes)
-mc
+classes_desejadas[0:5]
 
-plt.figure(figsize=(8, 6))
-sns.heatmap(mc, annot=True, fmt='d', cmap='Blues', 
-            xticklabels=label_encoder.classes_, 
-            yticklabels=label_encoder.classes_)
-plt.xlabel('Previsão')
-plt.ylabel('Real')
-plt.title('Matriz de Confusão')
-plt.show()
+val_loss, val_acc = mlp.evaluate(atributos_test, classe_dummy_test, verbose=0)
+
+print("RESULTADOS TREINO")
+acc_media = np.mean(historico.history['categorical_accuracy'])
+loss_media = np.mean(historico.history['loss'])
+print(f"Acurácia média: {acc_media:.4f}")
+print(f"Erro médio: {loss_media:.4f}")
+print(f"{'='*50}")
+print(f"{'='*50}")
+
+print(f"RESULTADOS PREDICT")
+print(f"Acurácia: {val_acc:.4f}")
+print(f"Erro {val_loss:.4f}")
