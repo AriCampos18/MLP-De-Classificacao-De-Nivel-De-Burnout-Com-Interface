@@ -113,7 +113,12 @@ function App() {
       depression_score: Number(depression_score),
       academic_pressure_score: Number(academic_pressure_score),
       financial_stress_score: Number(financial_stress_score),
-      social_support_score: Number(social_support_score)
+      social_support_score: Number(social_support_score),
+       physical_activity_hours: Number(physical_activity_hours),
+      sleep_quality: Number(sleep_quality),
+      attendance_percentage: Number(attendance_percentage),
+      cgpa: Number(cgpa),
+      internet_quality: Number(internet_quality)      
     }
 
     console.log("Dados enviados:", dados)
