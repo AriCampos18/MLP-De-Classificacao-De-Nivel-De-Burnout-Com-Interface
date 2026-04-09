@@ -1,36 +1,39 @@
 from flask import Flask, request, jsonify
 import numpy as np
-from keras.models import load_model
 import pickle
+from keras.models import load_model
 
 app = Flask(__name__)
 
-# carregar modelo treinado (você precisa salvar antes)
-modelo = load_model("modelo.h5")
-
-# exemplo: se você usar scaler/encoder, carregue também
-# scaler = pickle.load(open("scaler.pkl", "rb"))
+model = load_model("modelo_dengue.h5")
+encoder = pickle.load(
+    open("labelencoder_dengue.pkl","rb")
+)
 
 @app.route("/prever", methods=["POST"])
 def prever():
+
     dados = request.json
 
-    entrada = [
-        float(dados["age"]),
-        float(dados["daily_study_hours"]),
-        float(dados["daily_sleep_hours"]),
-        float(dados["screen_time_hours"]),
-        float(dados["anxiety_score"]),
-        float(dados["depression_score"])
-    ]
+    genero = encoder.transform([dados["gender"]])[0]
 
-    entrada = np.array(entrada).reshape(1, -1)
+    entrada = np.array([[
+        dados["age"],
+        genero,
+        dados["hemoglobin_g_dl"],
+        dados["wbc_count"],
+        dados["differential_count"],
+        dados["rbc_count"],
+        dados["platelet_count"],
+        dados["platelet_distribution_width"]
+    ]])
 
-    resultado = modelo.predict(entrada)
-    classe = int(np.argmax(resultado))
+    pred = model.predict(entrada)
+
+    classe = np.argmax(pred)
 
     return jsonify({
-        "classe": classe
+        "classe": int(classe)
     })
 
 if __name__ == "__main__":
